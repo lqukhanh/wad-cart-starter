@@ -67,3 +67,37 @@ test('a fractional qty throws RangeError', () => {
   const options = { vatRate: 0.08, freeShipFrom: 500000, shipFee: 30000 }
   assert.throws(() => cartTotal(items, options), RangeError)
 })
+
+test('an empty cart returns 0 even when options is missing', () => {
+  assert.equal(cartTotal([]), 0)
+})
+
+test('a negative vatRate throws RangeError', () => {
+  const items = [{ name: 'Áo thun', price: 100000, qty: 1 }]
+  const options = { vatRate: -0.05, freeShipFrom: 500000, shipFee: 30000 }
+  assert.throws(() => cartTotal(items, options), RangeError)
+})
+
+test('a negative shipFee throws RangeError', () => {
+  const items = [{ name: 'Áo thun', price: 100000, qty: 1 }]
+  const options = { vatRate: 0.08, freeShipFrom: 500000, shipFee: -1000 }
+  assert.throws(() => cartTotal(items, options), RangeError)
+})
+
+test('a negative freeShipFrom throws RangeError', () => {
+  const items = [{ name: 'Áo thun', price: 100000, qty: 1 }]
+  const options = { vatRate: 0.08, freeShipFrom: -100, shipFee: 30000 }
+  assert.throws(() => cartTotal(items, options), RangeError)
+})
+
+test('an item missing price throws RangeError', () => {
+  const items = [{ name: 'Sổ tay', qty: 1 }]
+  const options = { vatRate: 0.08, freeShipFrom: 500000, shipFee: 30000 }
+  assert.throws(() => cartTotal(items, options), RangeError)
+})
+
+test('an item with non-numeric price throws RangeError', () => {
+  const items = [{ name: 'Sổ tay', price: '45000', qty: 1 }]
+  const options = { vatRate: 0.08, freeShipFrom: 500000, shipFee: 30000 }
+  assert.throws(() => cartTotal(items, options), RangeError)
+})
